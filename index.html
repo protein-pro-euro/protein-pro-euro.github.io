@@ -4,265 +4,325 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Protein pro Euro – Rechner</title>
-<meta name="description" content="Wie viel Eiweiß bekommst du für 1 €? Rund 30 Supermarkt-Produkte im Vergleich, mit deinen eigenen Preisen.">
+<meta name="description" content="Wo bekommst du am meisten Eiweiß für dein Geld? 31 Supermarkt-Produkte im Vergleich, mit Kalorien und deinen eigenen Preisen.">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#1f7a4d">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%9A%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%AA%3C/text%3E%3C/svg%3E">
 <style>
   :root {
-    --bg: #f6f7f4;
+    --bg: #f4f5f7;
     --card: #ffffff;
-    --text: #1b1f1c;
-    --muted: #5d6660;
-    --line: #e2e6e1;
-    --accent: #1f7a4d;
-    --accent-soft: #e3f2ea;
-    --bar: #3fa36f;
-    --warn: #8a5a00;
-    --warn-soft: #fff3d6;
-    --shadow: 0 1px 3px rgba(0,0,0,.06);
+    --text: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --soft: #f1f3f5;
+    --accent: #16a34a;
+    --accent-soft: #e8f7ee;
+    --accent-text: #ffffff;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --warn-bg: #fef3c7;
+    --warn-text: #92400e;
+    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 4px 14px rgba(17,24,39,.05);
+    --radius: 18px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #121513;
-      --card: #1b201d;
-      --text: #e8ece9;
-      --muted: #9aa59e;
-      --line: #2c332e;
-      --accent: #5cc48e;
-      --accent-soft: #1d3327;
-      --bar: #4bb07d;
-      --warn: #f0c46a;
-      --warn-soft: #3a2f14;
+      --bg: #0f1115;
+      --card: #181b21;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --line: #2a2f37;
+      --soft: #22262d;
+      --accent: #22c55e;
+      --accent-soft: #15301f;
+      --accent-text: #06210f;
+      --warn-bg: #3b2f0d;
+      --warn-text: #fcd34d;
       --shadow: none;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
-  main { max-width: 640px; margin: 0 auto; padding: 16px 16px 120px; }
-  h1 { font-size: 1.6rem; line-height: 1.2; margin: 8px 0 6px; }
-  h2 { font-size: 1.15rem; margin: 28px 0 10px; }
-  p { margin: 0 0 10px; }
-  .lead { color: var(--muted); }
+  button { font: inherit; color: inherit; }
+  main { max-width: 560px; margin: 0 auto; padding: 16px 16px 140px; }
+
   .testbanner {
-    background: var(--warn-soft); color: var(--warn);
-    padding: 8px 12px; border-radius: 10px; font-size: .9rem; margin-bottom: 10px;
+    background: var(--warn-bg); color: var(--warn-text); font-size: .85rem;
+    padding: 8px 12px; border-radius: 12px; margin-bottom: 12px;
   }
-  .top3 {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0 6px;
+  .marke {
+    display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 600;
+    background: var(--card); box-shadow: var(--shadow); padding: 6px 12px; border-radius: 999px;
   }
-  .top3 div {
-    background: var(--accent-soft); border-radius: 12px; padding: 10px 8px; text-align: center;
+  h1 { font-size: 1.85rem; line-height: 1.12; letter-spacing: -.02em; margin: 14px 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+
+  /* Podest */
+  .podest { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .podest div {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 12px 8px 10px; text-align: center; position: relative;
   }
-  .top3 b { display: block; font-size: 1.25rem; color: var(--accent); }
-  .top3 span { font-size: .8rem; display: block; line-height: 1.25; }
-  .filter { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 12px; }
-  .filter button {
-    border: 1px solid var(--line); background: var(--card); color: var(--text);
-    padding: 7px 14px; border-radius: 999px; font: inherit; font-size: .9rem; cursor: pointer;
+  .podest .medaille { position: absolute; top: 6px; left: 8px; font-size: .95rem; }
+  .podest .emoji { font-size: 1.9rem; line-height: 1; display: block; margin: 4px 0 6px; }
+  .podest b { display: block; font-size: 1.15rem; letter-spacing: -.01em; }
+  .podest b small { font-size: .7rem; font-weight: 600; color: var(--muted); }
+  .podest span.n { display: block; font-size: .78rem; color: var(--muted); line-height: 1.2; margin-top: 2px; }
+  .podesttitel { font-size: .8rem; font-weight: 600; color: var(--muted); margin: 0 0 8px; text-transform: uppercase; letter-spacing: .04em; }
+
+  /* Steuerung */
+  .segment {
+    display: grid; grid-template-columns: 1fr 1fr; background: var(--soft);
+    border-radius: 12px; padding: 3px; margin-bottom: 10px;
   }
-  .filter button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .segment button {
+    border: 0; background: transparent; padding: 9px 6px; border-radius: 10px;
+    font-size: .9rem; font-weight: 600; color: var(--muted); cursor: pointer;
+  }
+  .segment button[aria-pressed="true"] { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+  .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-bottom: 8px; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chips button {
+    flex: 0 0 auto; border: 1px solid var(--line); background: var(--card);
+    padding: 7px 13px; border-radius: 999px; font-size: .88rem; cursor: pointer;
+  }
+  .chips button[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .legende { display: flex; gap: 14px; font-size: .78rem; color: var(--muted); margin: 4px 2px 12px; flex-wrap: wrap; }
+  .punkt { display: inline-block; width: 9px; height: 9px; border-radius: 50%; vertical-align: 0; margin-right: 5px; }
+  .punkt.gruen { background: var(--green); } .punkt.gelb { background: var(--yellow); } .punkt.rot { background: var(--red); }
+
+  /* Liste */
   ol.liste { list-style: none; margin: 0; padding: 0; }
   .item {
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 10px 12px; margin-bottom: 8px; box-shadow: var(--shadow);
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    margin-bottom: 8px; overflow: hidden;
   }
-  .zeile1 { display: flex; align-items: baseline; gap: 8px; }
-  .rang { color: var(--muted); font-size: .85rem; min-width: 1.6em; }
-  .name { flex: 1; font-weight: 600; }
-  .wert { font-weight: 700; color: var(--accent); white-space: nowrap; font-size: 1.05rem; }
-  .wert small { font-weight: 500; font-size: .75rem; }
-  .bar { height: 6px; background: var(--line); border-radius: 3px; margin: 7px 0 8px; overflow: hidden; }
-  .bar i { display: block; height: 100%; background: var(--bar); border-radius: 3px; }
-  .zeile2 { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
-  .zeile2 .info { flex: 1; min-width: 150px; }
-  label.preis { display: inline-flex; align-items: center; gap: 4px; color: var(--text); }
+  .kopf {
+    display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center;
+    width: 100%; border: 0; background: none; text-align: left; padding: 11px 14px 11px 11px; cursor: pointer;
+  }
+  .ico {
+    width: 44px; height: 44px; border-radius: 13px; background: var(--soft);
+    display: grid; place-items: center; font-size: 1.45rem;
+  }
+  .mitte { min-width: 0; display: block; }
+  .name, .bar { display: block; }
+  .name { font-weight: 600; font-size: .98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .name .rang { color: var(--muted); font-weight: 500; font-size: .85rem; margin-right: 4px; }
+  .bar { height: 4px; background: var(--soft); border-radius: 2px; margin-top: 7px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+  .wert { text-align: right; white-space: nowrap; }
+  .wert b { font-size: 1.2rem; letter-spacing: -.01em; }
+  .wert small { display: block; font-size: .7rem; color: var(--muted); font-weight: 600; }
+  .wert .punkt { margin: 0 0 0 6px; vertical-align: 1px; }
+
+  .koerper { display: none; padding: 0 14px 14px; }
+  .item.offen .koerper { display: block; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 2px 0 10px; }
+  .stats div { background: var(--soft); border-radius: 12px; padding: 8px 6px; text-align: center; }
+  .stats b { display: block; font-size: .98rem; }
+  .stats span { font-size: .72rem; color: var(--muted); }
+  .hinweis30 { font-size: .8rem; color: var(--muted); margin: 0 0 10px; }
+  .hinweis30 .tag { font-weight: 600; }
+  .zeile { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .zeile label { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; }
   input.zahl {
-    width: 4.6em; padding: 6px 8px; font: inherit; font-size: 16px; text-align: right;
-    border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text);
+    width: 5em; padding: 8px 10px; font: inherit; font-size: 16px; text-align: right;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text);
   }
-  input.zahl:focus { outline: 2px solid var(--accent); outline-offset: 0; }
-  input.zahl.geaendert { border-color: var(--accent); }
-  .mehr {
-    border: 0; background: none; color: var(--accent); font: inherit; font-size: .85rem;
-    padding: 6px 2px; cursor: pointer;
-  }
-  .details { display: none; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: .85rem; }
-  .item.offen .details { display: flex; }
-  .details label { display: inline-flex; align-items: center; gap: 4px; }
-  .pro30 { font-size: .85rem; color: var(--text); display: inline-block; margin-top: 2px; }
-  .zeile2 .info { flex-basis: 100%; }
-  .zeile2 label.preis { margin-right: auto; }
-  .badge {
-    display: inline-block; font-size: .7rem; font-weight: 600; line-height: 1.3;
-    padding: 1px 7px; border-radius: 999px; vertical-align: 2px;
-    background: var(--warn-soft); color: var(--warn); white-space: nowrap;
-  }
-  .top3titel { font-size: .85rem; font-weight: 600; color: var(--muted); margin: 16px 0 0; }
-  .top3titel + .top3 { margin-top: 6px; }
-  .filterlabel { font-size: .85rem; color: var(--muted); align-self: center; min-width: 4.5em; }
-  .filter + .filter { margin-top: -4px; }
-  .knopfzeile { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  input.zahl:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  input.zahl.geaendert { border-color: var(--accent); background: var(--accent-soft); }
+  .link { border: 0; background: none; color: var(--accent); font-size: .85rem; font-weight: 600; padding: 6px 0; cursor: pointer; margin-left: auto; }
+  .werte { display: none; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .werte.offen { display: flex; }
+  .werte label { font-size: .8rem; color: var(--muted); }
+  .werte input.zahl { width: 4.6em; }
+
+  .aktionen { display: flex; gap: 8px; margin: 12px 0 0; }
   .knopf {
-    border: 1px solid var(--line); background: var(--card); color: var(--text);
-    padding: 9px 14px; border-radius: 10px; font: inherit; font-size: .9rem; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); padding: 9px 14px; border-radius: 12px;
+    font-size: .88rem; font-weight: 600; cursor: pointer;
   }
   form.neu {
-    display: none; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 12px; margin-top: 10px; gap: 10px; flex-wrap: wrap; align-items: end;
+    display: none; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 14px; margin-top: 10px; gap: 10px; flex-wrap: wrap; align-items: end;
   }
   form.neu.offen { display: flex; }
-  form.neu label { display: flex; flex-direction: column; font-size: .8rem; color: var(--muted); gap: 3px; }
-  form.neu input { font: inherit; font-size: 16px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); }
-  form.neu input[name="name"] { width: 12em; }
-  form.neu input.zahl { width: 5.5em; }
+  form.neu label { display: flex; flex-direction: column; font-size: .75rem; color: var(--muted); gap: 4px; }
+  form.neu input { font: inherit; font-size: 16px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); }
+  form.neu input[name="titel"] { width: 11em; }
+  form.neu input.zahl { width: 5.2em; }
+
+  /* Umfrage */
   .umfrage {
-    background: var(--accent-soft); border-radius: 14px; padding: 16px; margin: 26px 0 10px;
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px; margin: 26px 0 0; text-align: center;
   }
-  .umfrage p.frage { font-weight: 600; margin-bottom: 12px; }
+  .umfrage .gross { font-size: 2rem; line-height: 1; }
+  .umfrage p.frage { font-weight: 600; margin: 10px 0 14px; }
   .jn { display: flex; gap: 10px; }
-  .jn button {
-    flex: 1; padding: 12px; font: inherit; font-weight: 700; border-radius: 10px; cursor: pointer;
-    border: 2px solid var(--accent);
-  }
-  .jn .ja { background: var(--accent); color: #fff; }
-  .jn .nein { background: transparent; color: var(--accent); }
-  .danke { display: none; font-weight: 600; }
-  body.beantwortet .jn, body.beantwortet .frage-wrap { display: none; }
+  .jn button { flex: 1; padding: 13px; font-weight: 700; border-radius: 14px; cursor: pointer; border: 0; }
+  .jn .ja { background: var(--accent); color: var(--accent-text); }
+  .jn .nein { background: var(--soft); }
+  .danke { display: none; font-weight: 600; margin: 8px 0 0; }
+  body.beantwortet .umfrage .jn, body.beantwortet .umfrage .frage { display: none; }
   body.beantwortet .danke { display: block; }
+
   .leiste {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
-    background: var(--card); border-top: 1px solid var(--line);
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-    box-shadow: 0 -4px 16px rgba(0,0,0,.08);
-    transform: translateY(110%); transition: transform .3s ease;
+    padding: 0 12px calc(12px + env(safe-area-inset-bottom));
+    transform: translateY(120%); transition: transform .35s cubic-bezier(.2,.8,.2,1);
   }
   .leiste.sichtbar { transform: none; }
-  .leiste .innen { max-width: 640px; margin: 0 auto; }
-  .leiste p { font-size: .92rem; font-weight: 600; margin-bottom: 10px; }
-  .leiste .jn button { padding: 10px; }
-  .leiste .spaeter { flex: 0 0 auto; border-color: var(--line); color: var(--muted); background: transparent; font-weight: 500; }
+  .leiste .innen {
+    max-width: 536px; margin: 0 auto; background: var(--card); border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.18); padding: 14px; border: 1px solid var(--line);
+  }
+  .leiste p { font-size: .88rem; font-weight: 600; margin: 0 0 10px; display: flex; gap: 10px; }
+  .leiste p span:first-child { font-size: 1.4rem; line-height: 1; }
+  .leiste .jn button { padding: 11px; }
+  .leiste .zu { flex: 0 0 44px; background: transparent; color: var(--muted); font-weight: 500; }
   body.beantwortet .leiste { display: none; }
-  .hinweis { font-size: .85rem; color: var(--muted); margin-top: 24px; }
-  .hinweis p { margin-bottom: 6px; }
-  footer { font-size: .8rem; color: var(--muted); margin-top: 24px; }
+
+  /* Fuß */
+  .info { margin-top: 26px; }
+  .info details { background: var(--card); border-radius: 14px; box-shadow: var(--shadow); margin-bottom: 8px; }
+  .info summary { cursor: pointer; padding: 12px 14px; font-weight: 600; font-size: .9rem; list-style: none; }
+  .info summary::-webkit-details-marker { display: none; }
+  .info summary::after { content: "＋"; float: right; color: var(--muted); }
+  .info details[open] summary::after { content: "－"; }
+  .info details p { margin: 0; padding: 0 14px 12px; font-size: .85rem; color: var(--muted); }
+  .privat { font-size: .8rem; color: var(--muted); text-align: center; margin: 14px 0 0; }
+  footer { font-size: .75rem; color: var(--muted); text-align: center; margin-top: 6px; }
 </style>
 </head>
 <body>
 <main>
-  <div class="testbanner" id="testbanner" hidden>Testmodus: Dieser Besuch wird nicht mitgezählt.</div>
+  <div class="testbanner" id="testbanner" hidden>🧪 Testmodus: Dieser Besuch wird nicht mitgezählt.</div>
 
-  <h1>Wie viel Protein bekommst du für 1&nbsp;€?</h1>
-  <p class="lead">Rund 30 Supermarkt-Produkte im Vergleich: wie viel Eiweiß du pro Euro bekommst und wie viel du dafür essen musst. Die Preise sind vorausgefüllt (Discounter, Stand November 2026). Tipp einfach die Preise aus deinem Supermarkt ein.</p>
+  <span class="marke">💪 Protein pro Euro</span>
+  <h1>Mehr Eiweiß für dein Geld</h1>
+  <p class="sub">31 Produkte vom Discounter. Tipp auf eins für Details und deinen Preis.</p>
 
-  <p class="top3titel" id="top3titel"></p>
-  <div class="top3" id="top3" aria-labelledby="top3titel"></div>
+  <p class="podesttitel" id="podesttitel"></p>
+  <div class="podest" id="podest"></div>
 
-  <div class="filter" role="group" aria-label="Sortierung">
-    <span class="filterlabel">Sortieren:</span>
-    <button type="button" data-sort="euro" aria-pressed="true">Protein pro €</button>
-    <button type="button" data-sort="kcal" aria-pressed="false">Protein pro kcal</button>
+  <div class="segment" role="group" aria-label="Sortieren nach">
+    <button type="button" data-sort="euro" aria-pressed="true">💶 Pro Euro</button>
+    <button type="button" data-sort="kcal" aria-pressed="false">🔥 Pro Kalorie</button>
   </div>
-  <div class="filter" role="group" aria-label="Filter">
-    <span class="filterlabel">Zeigen:</span>
+  <div class="chips" role="group" aria-label="Filter">
     <button type="button" data-filter="alle" aria-pressed="true">Alle</button>
-    <button type="button" data-filter="pflanzlich" aria-pressed="false">Pflanzlich</button>
-    <button type="button" data-filter="tierisch" aria-pressed="false">Tierisch</button>
+    <button type="button" data-filter="pflanzlich" aria-pressed="false">🌱 Pflanzlich</button>
+    <button type="button" data-filter="tierisch" aria-pressed="false">🥩 Tierisch</button>
+  </div>
+  <div class="legende" aria-label="Legende">
+    <span><i class="punkt gruen"></i>schlank</span>
+    <span><i class="punkt gelb"></i>mittel</span>
+    <span><i class="punkt rot"></i>kalorienreich</span>
   </div>
 
   <ol class="liste" id="liste"></ol>
 
-  <div class="knopfzeile">
-    <button type="button" class="knopf" id="neuKnopf">+ Eigenes Produkt</button>
-    <button type="button" class="knopf" id="resetKnopf">Preise zurücksetzen</button>
+  <div class="aktionen">
+    <button type="button" class="knopf" id="neuKnopf">＋ Eigenes Produkt</button>
+    <button type="button" class="knopf" id="resetKnopf">↺ Zurücksetzen</button>
   </div>
   <form class="neu" id="neuForm" autocomplete="off">
     <label>Name<input name="titel" required maxlength="40" placeholder="z. B. Seitan"></label>
     <label>Packung (g)<input class="zahl" name="gramm" inputmode="decimal" required placeholder="500"></label>
-    <label>Protein / 100 g<input class="zahl" name="protein" inputmode="decimal" required placeholder="20"></label>
-    <label>kcal / 100 g<input class="zahl" name="kcal" inputmode="decimal" placeholder="optional"></label>
+    <label>Protein/100 g<input class="zahl" name="protein" inputmode="decimal" required placeholder="20"></label>
+    <label>kcal/100 g<input class="zahl" name="kcal" inputmode="decimal" placeholder="optional"></label>
     <label>Preis (€)<input class="zahl" name="preis" inputmode="decimal" required placeholder="1,99"></label>
     <button type="submit" class="knopf">Hinzufügen</button>
   </form>
 
   <section class="umfrage" id="umfrage" aria-labelledby="umfrageTitel">
-    <div class="frage-wrap">
-      <p class="frage" id="umfrageTitel">Kurze Frage: Würdest du 3&nbsp;€ für eine Einkaufsliste zahlen, die aus deinem Proteinziel und Wochenbudget die günstigste Kombination rechnet?</p>
-    </div>
+    <div class="gross">🛒</div>
+    <p class="frage" id="umfrageTitel">Würdest du 3&nbsp;€ für eine Einkaufsliste zahlen, die aus deinem Proteinziel und Wochenbudget die günstigste Kombination rechnet?</p>
     <div class="jn">
       <button type="button" class="ja" data-antwort="ja">Ja</button>
       <button type="button" class="nein" data-antwort="nein">Nein</button>
     </div>
-    <p class="danke">Danke für deine Antwort! Die Einkaufsliste gibt es noch nicht. Wenn genug Leute Ja sagen, wird sie gebaut.</p>
+    <p class="danke">🙌 Danke! Die Liste gibt es noch nicht. Sagen genug Leute Ja, wird sie gebaut.</p>
   </section>
 
-  <div class="hinweis">
-    <p><b>Gut zu wissen:</b> Billiges Protein ist nicht automatisch gutes Protein. Haferflocken und Nudeln liefern viel Eiweiß pro Euro, aber für 30&nbsp;g Protein isst du über 200&nbsp;g davon und mehr als 800&nbsp;kcal. Als <span class="badge">kalorienreich</span> markiert ist alles mit weniger als 6&nbsp;g Protein pro 100&nbsp;kcal. Eiweiß aus Getreide ist außerdem weniger hochwertig und ergänzt sich gut mit Hülsenfrüchten (z.&nbsp;B. Nudeln mit Linsen).</p>
-    <p>Protein- und Kalorienwerte sind typische Werte pro 100&nbsp;g im Rohzustand bzw. abgetropft, Eier ohne Schale. Angaben ohne Gewähr.</p>
-    <p><b>Datenschutz:</b> Diese Seite setzt keine Cookies. Gezählt werden nur Seitenaufrufe und die Antworten auf die Frage oben, anonym und ohne IP-Adresse oder sonstige persönliche Daten. Deine eingetippten Preise verlassen dein Gerät nicht.</p>
+  <div class="info">
+    <details>
+      <summary>ℹ️ So wird gerechnet</summary>
+      <p>Gramm Protein pro Euro, aus Packungsgröße, Proteingehalt und Preis. Die Ampel zeigt, wie viele Kalorien du dafür mitisst: grün ab 10&nbsp;g Protein pro 100&nbsp;kcal, rot unter 6&nbsp;g. Haferflocken und Nudeln sind billig, aber für 30&nbsp;g Protein isst du über 800&nbsp;kcal. Eiweiß aus Getreide ist außerdem weniger hochwertig und ergänzt sich gut mit Hülsenfrüchten.</p>
+      <p>Werte pro 100&nbsp;g roh bzw. abgetropft, Eier ohne Schale. Preise: Discounter online, Stand November 2026. Ohne Gewähr.</p>
+    </details>
+    <details>
+      <summary>🔒 Datenschutz</summary>
+      <p>Keine Cookies. Gezählt werden nur Seitenaufrufe und die Antworten auf die Frage oben, anonym und ohne IP-Adresse oder andere persönliche Daten. Deine eingetippten Preise bleiben auf deinem Gerät.</p>
+    </details>
   </div>
-  <footer>Future Food · Protein-pro-Euro-Rechner</footer>
+  <p class="privat">🔒 Keine Cookies · nur anonyme Zählung</p>
+  <footer>Future Food</footer>
 </main>
 
 <div class="leiste" id="leiste" role="region" aria-label="Kurze Frage">
   <div class="innen">
-    <p>Würdest du 3&nbsp;€ für eine Einkaufsliste zahlen, die aus deinem Proteinziel und Wochenbudget die günstigste Kombination rechnet?</p>
+    <p><span>🛒</span><span>Würdest du 3&nbsp;€ für eine Einkaufsliste zahlen, die aus deinem Proteinziel und Wochenbudget die günstigste Kombination rechnet?</span></p>
     <div class="jn">
       <button type="button" class="ja" data-antwort="ja">Ja</button>
       <button type="button" class="nein" data-antwort="nein">Nein</button>
-      <button type="button" class="spaeter" id="spaeter" aria-label="Später">Später</button>
+      <button type="button" class="nein zu" id="spaeter" aria-label="Später">✕</button>
     </div>
   </div>
 </div>
 
 <script>
 // ===== Zähler-Adresse =====================================================
-// Nach dem Deploy des Apps Scripts hier die Web-App-URL (endet auf /exec) eintragen.
+// Web-App-URL des Apps Scripts (endet auf /exec).
 const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwwuH46_-1iBMU8YYoNssJVSZ7gIWtl_kVXSJIy85bCj3-Q1hO_y8t9N0zyrKOQxbOp/exec';
 // ==========================================================================
 
-// Produkte: Packung in g (bei Dosen: Abtropfgewicht, bei Eiern: ohne Schale),
-// Protein und kcal je 100 g (typische Werte), Preis in € (Discounter-Onlinepreise, Stand 04.11.2026).
+// Packung in g (Dosen: Abtropfgewicht, Eier: ohne Schale), Protein und kcal je 100 g
+// (typische Werte), Preis in € (Discounter-Onlinepreise, Stand 04.11.2026).
 const PRODUKTE = [
   // tierisch
-  { name: 'Magerquark (0,3 % Fett)',       gramm: 500,  protein: 12,   kcal: 67 , preis: 1.19,  art: 'tierisch' },
-  { name: 'Skyr natur',                    gramm: 500,  protein: 11,   kcal: 63 , preis: 1.29,  art: 'tierisch' },
-  { name: 'Körniger Frischkäse',           gramm: 200,  protein: 11,   kcal: 98 , preis: 1.19,  art: 'tierisch' },
-  { name: 'Hüttenkäse (Marke)',            gramm: 400,  protein: 12,   kcal: 100, preis: 2.22,  art: 'tierisch' },
-  { name: 'Griechischer Joghurt 0 %',      gramm: 200,  protein: 10,   kcal: 55 , preis: 1.49,  art: 'tierisch' },
-  { name: 'Harzer Käse',                   gramm: 200,  protein: 28,   kcal: 120, preis: 1.99,  art: 'tierisch' },
-  { name: 'Gouda gerieben',                gramm: 250,  protein: 24,   kcal: 360, preis: 1.79,  art: 'tierisch' },
-  { name: 'Mozzarella gerieben',           gramm: 250,  protein: 22,   kcal: 290, preis: 1.59,  art: 'tierisch' },
-  { name: 'Milch 1,5 % (1 l)',             gramm: 1000, protein: 3.4,  kcal: 47 , preis: 0.85,  art: 'tierisch' },
-  { name: 'Eier, 18 Stück (Bodenhaltung)', gramm: 950,  protein: 12.5, kcal: 140, preis: 4.19,  art: 'tierisch' },
-  { name: 'Hähnchenbrustfilet 1,5 kg',     gramm: 1500, protein: 23,   kcal: 105, preis: 12.99, art: 'tierisch' },
-  { name: 'Hähnchenbrustfilet 400 g',      gramm: 400,  protein: 23,   kcal: 105, preis: 5.49,  art: 'tierisch' },
-  { name: 'Putenbrustfilet',               gramm: 800,  protein: 24,   kcal: 105, preis: 9.99,  art: 'tierisch' },
-  { name: 'Rinderhackfleisch',             gramm: 800,  protein: 19,   kcal: 220, preis: 8.79,  art: 'tierisch' },
-  { name: 'Hackfleisch gemischt',          gramm: 500,  protein: 18,   kcal: 260, preis: 4.99,  art: 'tierisch' },
-  { name: 'Thunfisch in Öl (Dose)',        gramm: 140,  protein: 25,   kcal: 195, preis: 1.29,  art: 'tierisch' },
-  { name: 'Alaska-Seelachsfilet (TK)',     gramm: 1000, protein: 16,   kcal: 75 , preis: 6.59,  art: 'tierisch' },
-  { name: 'Whey-Proteinpulver',            gramm: 500,  protein: 75,   kcal: 380, preis: 14.99, art: 'tierisch' },
-  { name: 'High-Protein-Pudding',          gramm: 400,  protein: 10,   kcal: 75 , preis: 1.99,  art: 'tierisch' },
+  { name: 'Magerquark',             icon: '🥣', info: '500 g, 0,3 % Fett',      gramm: 500,  protein: 12,   kcal: 67,  preis: 1.19,  art: 'tierisch' },
+  { name: 'Skyr natur',             icon: '🥛', info: '500 g',                  gramm: 500,  protein: 11,   kcal: 63,  preis: 1.29,  art: 'tierisch' },
+  { name: 'Körniger Frischkäse',    icon: '🫙', info: '200 g',                  gramm: 200,  protein: 11,   kcal: 98,  preis: 1.19,  art: 'tierisch' },
+  { name: 'Hüttenkäse',             icon: '🫙', info: '400 g, Markenware',      gramm: 400,  protein: 12,   kcal: 100, preis: 2.22,  art: 'tierisch' },
+  { name: 'Griechischer Joghurt 0 %', icon: '🥣', info: '200 g',                gramm: 200,  protein: 10,   kcal: 55,  preis: 1.49,  art: 'tierisch' },
+  { name: 'Harzer Käse',            icon: '🧀', info: '200 g',                  gramm: 200,  protein: 28,   kcal: 120, preis: 1.99,  art: 'tierisch' },
+  { name: 'Gouda gerieben',         icon: '🧀', info: '250 g',                  gramm: 250,  protein: 24,   kcal: 360, preis: 1.79,  art: 'tierisch' },
+  { name: 'Mozzarella gerieben',    icon: '🍕', info: '250 g',                  gramm: 250,  protein: 22,   kcal: 290, preis: 1.59,  art: 'tierisch' },
+  { name: 'Milch 1,5 %',            icon: '🥛', info: '1 Liter',                gramm: 1000, protein: 3.4,  kcal: 47,  preis: 0.85,  art: 'tierisch' },
+  { name: 'Eier',                   icon: '🥚', info: '18 Stück, Bodenhaltung', gramm: 950,  protein: 12.5, kcal: 140, preis: 4.19,  art: 'tierisch' },
+  { name: 'Hähnchenbrust 1,5 kg',   icon: '🍗', info: '1,5 kg',                 gramm: 1500, protein: 23,   kcal: 105, preis: 12.99, art: 'tierisch' },
+  { name: 'Hähnchenbrust 400 g',    icon: '🍗', info: '400 g',                  gramm: 400,  protein: 23,   kcal: 105, preis: 5.49,  art: 'tierisch' },
+  { name: 'Putenbrust',             icon: '🦃', info: '800 g',                  gramm: 800,  protein: 24,   kcal: 105, preis: 9.99,  art: 'tierisch' },
+  { name: 'Rinderhack',             icon: '🥩', info: '800 g',                  gramm: 800,  protein: 19,   kcal: 220, preis: 8.79,  art: 'tierisch' },
+  { name: 'Hackfleisch gemischt',   icon: '🥩', info: '500 g',                  gramm: 500,  protein: 18,   kcal: 260, preis: 4.99,  art: 'tierisch' },
+  { name: 'Thunfisch in Öl',        icon: '🐟', info: 'Dose, 140 g abgetropft', gramm: 140,  protein: 25,   kcal: 195, preis: 1.29,  art: 'tierisch' },
+  { name: 'Seelachsfilet (TK)',     icon: '🐟', info: '1 kg',                   gramm: 1000, protein: 16,   kcal: 75,  preis: 6.59,  art: 'tierisch' },
+  { name: 'Whey-Proteinpulver',     icon: '🥤', info: '500 g',                  gramm: 500,  protein: 75,   kcal: 380, preis: 14.99, art: 'tierisch' },
+  { name: 'High-Protein-Pudding',   icon: '🍮', info: '400 g',                  gramm: 400,  protein: 10,   kcal: 75,  preis: 1.99,  art: 'tierisch' },
   // pflanzlich
-  { name: 'Rote Linsen',                   gramm: 500,  protein: 25,   kcal: 340, preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Tellerlinsen',                  gramm: 500,  protein: 23,   kcal: 320, preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Kichererbsen (getrocknet)',     gramm: 500,  protein: 20,   kcal: 360, preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Grüne Erbsen (getrocknet)',     gramm: 500,  protein: 22,   kcal: 330, preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Kidneybohnen (Dose)',           gramm: 255,  protein: 8,    kcal: 105, preis: 0.69,  art: 'pflanzlich' },
-  { name: 'Tofu natur (Bio)',              gramm: 400,  protein: 15,   kcal: 140, preis: 2.29,  art: 'pflanzlich' },
-  { name: 'Sojaschnetzel',                 gramm: 300,  protein: 50,   kcal: 340, preis: 2.99,  art: 'pflanzlich' },
-  { name: 'Haferflocken',                  gramm: 500,  protein: 13.5, kcal: 372, preis: 0.69,  art: 'pflanzlich' },
-  { name: 'Spaghetti',                     gramm: 500,  protein: 12.5, kcal: 355, preis: 0.69,  art: 'pflanzlich' },
-  { name: 'Vollkornnudeln (Bio)',          gramm: 500,  protein: 13,   kcal: 345, preis: 0.85,  art: 'pflanzlich' },
-  { name: 'Erdnüsse geröstet',             gramm: 200,  protein: 25,   kcal: 600, preis: 0.79,  art: 'pflanzlich' },
-  { name: 'Erdnusscreme',                  gramm: 340,  protein: 25,   kcal: 620, preis: 1.70,  art: 'pflanzlich' },
+  { name: 'Rote Linsen',            icon: '🫘', info: '500 g, getrocknet',      gramm: 500,  protein: 25,   kcal: 340, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Tellerlinsen',           icon: '🫘', info: '500 g, getrocknet',      gramm: 500,  protein: 23,   kcal: 320, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Kichererbsen',           icon: '🧆', info: '500 g, getrocknet',      gramm: 500,  protein: 20,   kcal: 360, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Grüne Erbsen',           icon: '🍲', info: '500 g, getrocknet',      gramm: 500,  protein: 22,   kcal: 330, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Kidneybohnen',           icon: '🥫', info: 'Dose, 255 g abgetropft', gramm: 255,  protein: 8,    kcal: 105, preis: 0.69,  art: 'pflanzlich' },
+  { name: 'Tofu natur',             icon: '🧈', info: '400 g, Bio',             gramm: 400,  protein: 15,   kcal: 140, preis: 2.29,  art: 'pflanzlich' },
+  { name: 'Sojaschnetzel',          icon: '🌱', info: '300 g, Preis geschätzt', gramm: 300,  protein: 50,   kcal: 340, preis: 2.99,  art: 'pflanzlich' },
+  { name: 'Haferflocken',           icon: '🌾', info: '500 g',                  gramm: 500,  protein: 13.5, kcal: 372, preis: 0.69,  art: 'pflanzlich' },
+  { name: 'Spaghetti',              icon: '🍝', info: '500 g',                  gramm: 500,  protein: 12.5, kcal: 355, preis: 0.69,  art: 'pflanzlich' },
+  { name: 'Vollkornnudeln',         icon: '🍝', info: '500 g, Bio',             gramm: 500,  protein: 13,   kcal: 345, preis: 0.85,  art: 'pflanzlich' },
+  { name: 'Erdnüsse',               icon: '🥜', info: '200 g, geröstet',        gramm: 200,  protein: 25,   kcal: 600, preis: 0.79,  art: 'pflanzlich' },
+  { name: 'Erdnusscreme',           icon: '🥜', info: '340 g',                  gramm: 340,  protein: 25,   kcal: 620, preis: 1.70,  art: 'pflanzlich' },
 ];
 
 // ---------- Zählen (anonym, ohne Cookies) ----------
@@ -294,43 +354,32 @@ const produkte = PRODUKTE.map((p, i) => ({ ...p, id: i, standardPreis: p.preis }
 let filter = 'alle';
 let sortierung = 'euro'; // 'euro' = Protein pro €, 'kcal' = Protein pro 100 kcal
 let naechsteId = produkte.length;
+const offene = new Set();
+const werteOffen = new Set();
 
 const euro = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const zahlFmt = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
+const zahl = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
+const ganz = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
 
 function leseZahl(text) {
   const n = parseFloat(String(text).replace(/\s/g, '').replace(',', '.'));
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 function proEuro(p) {
-  if (!p.preis || !p.gramm || !p.protein) return 0;
-  return (p.gramm * p.protein / 100) / p.preis;
+  return p.preis && p.gramm && p.protein ? (p.gramm * p.protein / 100) / p.preis : 0;
 }
-// Gramm Protein je 100 kcal; unter 6 gilt ein Produkt als kalorienreich.
-const KALORIEN_GRENZE = 6;
 function proKcal(p) {
   return p.kcal && p.protein ? p.protein / p.kcal * 100 : 0;
 }
-function istKalorienreich(p) {
-  return !!p.kcal && proKcal(p) < KALORIEN_GRENZE;
+// Ampel: grün ab 10 g Protein pro 100 kcal, gelb ab 6 g, darunter rot.
+function ampel(p) {
+  if (!p.kcal) return null;
+  const k = proKcal(p);
+  return k >= 10 ? 'gruen' : k >= 6 ? 'gelb' : 'rot';
 }
-function metrik(p) {
-  return sortierung === 'kcal' ? proKcal(p) : proEuro(p);
-}
-function wertHtml(p) {
-  return sortierung === 'kcal'
-    ? `${zahlFmt.format(proKcal(p))} g <small>Protein/100 kcal</small>`
-    : `${zahlFmt.format(proEuro(p))} g <small>Protein/€</small>`;
-}
-// Was man für 30 g Protein (etwa eine Mahlzeit) essen und zahlen muss.
-function zeile30(p) {
-  if (!p.protein || !p.preis || !p.gramm) return '–';
-  const menge = 3000 / p.protein;
-  const teile = [`${Math.round(menge)} g`];
-  if (p.kcal) teile.push(`${Math.round(menge * p.kcal / 1000) * 10} kcal`);
-  teile.push(`${euro.format(30 / proEuro(p))} €`);
-  return 'Für 30 g Protein: ' + teile.join(' · ');
-}
+const AMPEL_TEXT = { gruen: 'schlank', gelb: 'mittel', rot: 'kalorienreich' };
+function metrik(p) { return sortierung === 'kcal' ? proKcal(p) : proEuro(p); }
+function einheit() { return sortierung === 'kcal' ? 'g / 100 kcal' : 'g / €'; }
 function sortiert() {
   return produkte
     .filter(p => filter === 'alle' || p.art === filter)
@@ -339,60 +388,89 @@ function sortiert() {
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+// Was 30 g Protein (etwa eine Mahlzeit) an Menge, Kalorien und Geld kosten.
+function portion(p) {
+  if (!p.protein || !p.preis || !p.gramm) return null;
+  const menge = 3000 / p.protein;
+  return {
+    menge: ganz.format(menge) + ' g',
+    kcal: p.kcal ? ganz.format(Math.round(menge * p.kcal / 1000) * 10) : '–',
+    preis: euro.format(30 / proEuro(p)) + ' €',
+  };
+}
+function statsHtml(p) {
+  const x = portion(p);
+  if (!x) return '';
+  return `<div><b>${x.menge}</b><span>essen</span></div>
+          <div><b>${x.kcal}</b><span>kcal</span></div>
+          <div><b>${x.preis}</b><span>kostet</span></div>`;
+}
 
 const liste = document.getElementById('liste');
-const offene = new Set();
+
+function karte(p, i, max) {
+  const a = ampel(p);
+  const offen = offene.has(p.id);
+  return `<li class="item${offen ? ' offen' : ''}" data-id="${p.id}">
+    <button type="button" class="kopf" aria-expanded="${offen}">
+      <span class="ico" aria-hidden="true">${esc(p.icon || '🛒')}</span>
+      <span class="mitte">
+        <span class="name"><span class="rang">${i + 1}</span>${esc(p.name)}</span>
+        <span class="bar"><i style="width:${(metrik(p) / max * 100).toFixed(1)}%"></i></span>
+      </span>
+      <span class="wert"><b data-feld="wert">${zahl.format(metrik(p))}</b>${a ? `<i class="punkt ${a}" title="${AMPEL_TEXT[a]}"></i>` : ''}<small>${einheit()}</small></span>
+    </button>
+    <div class="koerper">
+      <p class="hinweis30">Für 30&nbsp;g Protein${a ? ` · <span class="tag">${AMPEL_TEXT[a]}</span>` : ''}</p>
+      <div class="stats" data-feld="stats">${statsHtml(p)}</div>
+      <div class="zeile">
+        <label>Preis <input class="zahl${p.preis !== p.standardPreis ? ' geaendert' : ''}" data-feld="preis" inputmode="decimal" value="${euro.format(p.preis)}" aria-label="Preis für ${esc(p.name)} in Euro"> €</label>
+        <span style="font-size:.8rem;color:var(--muted)">${esc(p.info || zahl.format(p.gramm) + ' g')}</span>
+        <button type="button" class="link" data-aktion="werte">${werteOffen.has(p.id) ? 'fertig' : 'Werte ändern'}</button>
+      </div>
+      <div class="werte${werteOffen.has(p.id) ? ' offen' : ''}">
+        <label>Packung <input class="zahl" data-feld="gramm" inputmode="decimal" value="${zahl.format(p.gramm)}"> g</label>
+        <label>Protein <input class="zahl" data-feld="protein" inputmode="decimal" value="${zahl.format(p.protein)}"> g/100 g</label>
+        <label>Energie <input class="zahl" data-feld="kcal" inputmode="decimal" value="${p.kcal ? zahl.format(p.kcal) : ''}"> kcal/100 g</label>
+      </div>
+    </div>
+  </li>`;
+}
 
 function zeichne() {
   const daten = sortiert();
   const max = Math.max(...daten.map(metrik), 1);
-  liste.innerHTML = daten.map((p, i) => {
-    const g = metrik(p);
-    return `<li class="item${offene.has(p.id) ? ' offen' : ''}" data-id="${p.id}">
-      <div class="zeile1">
-        <span class="rang">${i + 1}.</span>
-        <span class="name">${esc(p.name)}${istKalorienreich(p) ? ' <span class="badge" title="weniger als 6 g Protein pro 100 kcal">kalorienreich</span>' : ''}</span>
-        <span class="wert" data-feld="wert">${wertHtml(p)}</span>
-      </div>
-      <div class="bar"><i data-feld="bar" style="width:${(g / max * 100).toFixed(1)}%"></i></div>
-      <div class="zeile2">
-        <span class="info">${zahlFmt.format(p.gramm)} g · ${zahlFmt.format(p.protein)} g Protein${p.kcal ? ' · ' + zahlFmt.format(p.kcal) + ' kcal' : ''} je 100 g<br>
-          <span class="pro30" data-feld="z30">${zeile30(p)}</span></span>
-        <label class="preis">Preis <input class="zahl${p.preis !== p.standardPreis ? ' geaendert' : ''}" data-feld="preis" inputmode="decimal" value="${euro.format(p.preis)}" aria-label="Preis für ${esc(p.name)} in Euro"> €</label>
-        <button type="button" class="mehr" data-aktion="details" aria-expanded="${offene.has(p.id)}">${offene.has(p.id) ? 'weniger' : 'ändern'}</button>
-      </div>
-      <div class="details">
-        <label>Packung <input class="zahl" data-feld="gramm" inputmode="decimal" value="${zahlFmt.format(p.gramm)}"> g</label>
-        <label>Protein <input class="zahl" data-feld="protein" inputmode="decimal" value="${zahlFmt.format(p.protein)}"> g/100 g</label>
-        <label>Energie <input class="zahl" data-feld="kcal" inputmode="decimal" value="${p.kcal ? zahlFmt.format(p.kcal) : ''}"> kcal/100 g</label>
-      </div>
-    </li>`;
-  }).join('');
-  zeichneTop3();
+  liste.innerHTML = daten.map((p, i) => karte(p, i, max)).join('');
+  zeichnePodest();
 }
 
-function zeichneTop3() {
-  // Aufs Podest kommen nur Produkte, die nicht kalorienreich sind.
-  const top = sortiert().filter(p => !istKalorienreich(p)).slice(0, 3);
-  document.getElementById('top3titel').textContent = sortierung === 'kcal'
-    ? 'Am meisten Protein pro Kalorie'
-    : 'Am günstigsten, ohne Kalorienbombe';
-  const einheit = sortierung === 'kcal' ? ' g/100 kcal' : ' g/€';
-  document.getElementById('top3').innerHTML = top.map(p =>
-    `<div><b>${zahlFmt.format(metrik(p))}${einheit}</b><span>${esc(p.name)}</span></div>`).join('');
+function zeichnePodest() {
+  // Aufs Podest kommt nichts Kalorienreiches.
+  const top = sortiert().filter(p => ampel(p) !== 'rot').slice(0, 3);
+  document.getElementById('podesttitel').textContent =
+    sortierung === 'kcal' ? 'Am meisten Protein pro Kalorie' : 'Am günstigsten, ohne Kalorienbombe';
+  const medaillen = ['🥇', '🥈', '🥉'];
+  document.getElementById('podest').innerHTML = top.map((p, i) =>
+    `<div><span class="medaille">${medaillen[i]}</span><span class="emoji">${esc(p.icon || '🛒')}</span>
+      <b>${zahl.format(metrik(p))} <small>${sortierung === 'kcal' ? 'g/100 kcal' : 'g/€'}</small></b>
+      <span class="n">${esc(p.name)}</span></div>`).join('');
 }
 
-// Beim Tippen nur die Zahlen der Zeile aktualisieren, neu sortiert wird beim Verlassen des Felds.
+function produktVon(el) {
+  return produkte.find(x => x.id === Number(el.closest('li').dataset.id));
+}
+
+// Beim Tippen nur die Zahlen der Karte aktualisieren, neu sortiert wird beim Verlassen des Felds.
 liste.addEventListener('input', ev => {
   const feld = ev.target.dataset.feld;
   if (!feld) return;
-  const li = ev.target.closest('li');
-  const p = produkte.find(x => x.id === Number(li.dataset.id));
+  const p = produktVon(ev.target);
   const n = leseZahl(ev.target.value);
   if (n === null) return;
   p[feld] = n;
-  li.querySelector('[data-feld="wert"]').innerHTML = wertHtml(p);
-  li.querySelector('[data-feld="z30"]').textContent = zeile30(p);
+  const li = ev.target.closest('li');
+  li.querySelector('[data-feld="wert"]').textContent = zahl.format(metrik(p));
+  li.querySelector('[data-feld="stats"]').innerHTML = statsHtml(p);
   if (feld === 'preis') ev.target.classList.toggle('geaendert', p.preis !== p.standardPreis);
   zeigeLeisteBald();
 });
@@ -400,11 +478,22 @@ liste.addEventListener('change', ev => {
   if (ev.target.dataset.feld) zeichne();
 });
 liste.addEventListener('click', ev => {
-  const knopf = ev.target.closest('[data-aktion="details"]');
-  if (!knopf) return;
-  const id = Number(knopf.closest('li').dataset.id);
-  offene.has(id) ? offene.delete(id) : offene.add(id);
-  zeichne();
+  const werteKnopf = ev.target.closest('[data-aktion="werte"]');
+  if (werteKnopf) {
+    const id = produktVon(werteKnopf).id;
+    werteOffen.has(id) ? werteOffen.delete(id) : werteOffen.add(id);
+    zeichne();
+    return;
+  }
+  const kopf = ev.target.closest('.kopf');
+  if (!kopf) return;
+  const li = kopf.closest('li');
+  const id = Number(li.dataset.id);
+  const auf = !offene.has(id);
+  auf ? offene.add(id) : offene.delete(id);
+  li.classList.toggle('offen', auf);
+  kopf.setAttribute('aria-expanded', String(auf));
+  if (auf) zeigeLeisteBald();
 });
 
 document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
@@ -440,11 +529,13 @@ neuForm.addEventListener('submit', ev => {
   const preis = leseZahl(neuForm.preis.value);
   const kcal = leseZahl(neuForm.kcal.value);
   if (!name || !gramm || !protein || !preis) { alert('Bitte Name, Packung, Protein und Preis ausfüllen.'); return; }
-  produkte.push({ name, gramm, protein, kcal, preis, standardPreis: preis, art: 'eigen', id: naechsteId++ });
+  const id = naechsteId++;
+  produkte.push({ name, icon: '🛒', info: zahl.format(gramm) + ' g, eigenes Produkt', gramm, protein, kcal, preis, standardPreis: preis, art: 'eigen', id });
+  offene.add(id);
   neuForm.reset();
   neuForm.classList.remove('offen');
   filter = 'alle';
-  document.querySelectorAll('.filter button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.filter === 'alle')));
+  document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.filter === 'alle')));
   zeichne();
 });
 
@@ -480,7 +571,7 @@ document.getElementById('spaeter').addEventListener('click', () => {
 });
 addEventListener('scroll', () => {
   if (leiste.classList.contains('sichtbar')) { zeigeLeiste(); return; }
-  if (scrollY > 700) zeigeLeiste();
+  if (scrollY > 900) zeigeLeiste();
 }, { passive: true });
 setTimeout(zeigeLeiste, 25000);
 
