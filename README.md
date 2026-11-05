@@ -18,5 +18,13 @@ landen im Blatt „Test“ und zählen nicht mit.
 Preise: Onlinepreise eines Discounters (überwiegend ALDI SÜD), abgerufen am 04.11.2026.
 Haferflocken nach ALDI-Nord-Onlinepreis, Eier als 18er-Packung. Sojaschnetzel sind
 geschätzt (Fachhandel, rund 10 €/kg), weil der Discounter sie nicht online führt.
-Proteinwerte sind typische Werte pro 100 g im Rohzustand; bei Dosen gilt das
-Abtropfgewicht, bei Eiern das Gewicht ohne Schale (rund 53 g je Ei).
+Protein- und Kalorienwerte sind typische Werte pro 100 g im Rohzustand; bei Dosen gilt
+das Abtropfgewicht, bei Eiern das Gewicht ohne Schale (rund 53 g je Ei).
+
+## Warum auch Kalorien
+
+Protein pro Euro allein belohnt billige Kalorienbomben: Für 30 g Protein aus Haferflocken
+isst man über 200 g und rund 830 kcal. Jede Karte zeigt deshalb, wie viel man für 30 g
+Protein essen muss. Produkte mit weniger als 6 g Protein pro 100 kcal sind als
+„kalorienreich“ markiert und kommen nicht aufs Podest. Sortieren geht nach Protein pro €
+oder Protein pro kcal.

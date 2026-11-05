@@ -96,7 +96,18 @@
   .details { display: none; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: .85rem; }
   .item.offen .details { display: flex; }
   .details label { display: inline-flex; align-items: center; gap: 4px; }
-  .pro100 { font-size: .8rem; color: var(--muted); }
+  .pro30 { font-size: .85rem; color: var(--text); display: inline-block; margin-top: 2px; }
+  .zeile2 .info { flex-basis: 100%; }
+  .zeile2 label.preis { margin-right: auto; }
+  .badge {
+    display: inline-block; font-size: .7rem; font-weight: 600; line-height: 1.3;
+    padding: 1px 7px; border-radius: 999px; vertical-align: 2px;
+    background: var(--warn-soft); color: var(--warn); white-space: nowrap;
+  }
+  .top3titel { font-size: .85rem; font-weight: 600; color: var(--muted); margin: 16px 0 0; }
+  .top3titel + .top3 { margin-top: 6px; }
+  .filterlabel { font-size: .85rem; color: var(--muted); align-self: center; min-width: 4.5em; }
+  .filter + .filter { margin-top: -4px; }
   .knopfzeile { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
   .knopf {
     border: 1px solid var(--line); background: var(--card); color: var(--text);
@@ -148,11 +159,18 @@
   <div class="testbanner" id="testbanner" hidden>Testmodus: Dieser Besuch wird nicht mitgezählt.</div>
 
   <h1>Wie viel Protein bekommst du für 1&nbsp;€?</h1>
-  <p class="lead">Rund 30 Supermarkt-Produkte, sortiert nach Gramm Eiweiß pro Euro. Die Preise sind vorausgefüllt (Discounter, Stand November 2026). Tipp einfach die Preise aus deinem Supermarkt ein.</p>
+  <p class="lead">Rund 30 Supermarkt-Produkte im Vergleich: wie viel Eiweiß du pro Euro bekommst und wie viel du dafür essen musst. Die Preise sind vorausgefüllt (Discounter, Stand November 2026). Tipp einfach die Preise aus deinem Supermarkt ein.</p>
 
-  <div class="top3" id="top3" aria-label="Die drei günstigsten Proteinquellen"></div>
+  <p class="top3titel" id="top3titel"></p>
+  <div class="top3" id="top3" aria-labelledby="top3titel"></div>
 
+  <div class="filter" role="group" aria-label="Sortierung">
+    <span class="filterlabel">Sortieren:</span>
+    <button type="button" data-sort="euro" aria-pressed="true">Protein pro €</button>
+    <button type="button" data-sort="kcal" aria-pressed="false">Protein pro kcal</button>
+  </div>
   <div class="filter" role="group" aria-label="Filter">
+    <span class="filterlabel">Zeigen:</span>
     <button type="button" data-filter="alle" aria-pressed="true">Alle</button>
     <button type="button" data-filter="pflanzlich" aria-pressed="false">Pflanzlich</button>
     <button type="button" data-filter="tierisch" aria-pressed="false">Tierisch</button>
@@ -168,6 +186,7 @@
     <label>Name<input name="titel" required maxlength="40" placeholder="z. B. Seitan"></label>
     <label>Packung (g)<input class="zahl" name="gramm" inputmode="decimal" required placeholder="500"></label>
     <label>Protein / 100 g<input class="zahl" name="protein" inputmode="decimal" required placeholder="20"></label>
+    <label>kcal / 100 g<input class="zahl" name="kcal" inputmode="decimal" placeholder="optional"></label>
     <label>Preis (€)<input class="zahl" name="preis" inputmode="decimal" required placeholder="1,99"></label>
     <button type="submit" class="knopf">Hinzufügen</button>
   </form>
@@ -184,8 +203,8 @@
   </section>
 
   <div class="hinweis">
-    <p><b>Gut zu wissen:</b> Gramm sind nicht alles. Eiweiß aus Getreide allein ist weniger hochwertig. Zusammen mit Hülsenfrüchten (z.&nbsp;B. Nudeln mit Linsen) ergänzt es sich gut. Nüsse und Erdnusscreme bringen viele Kalorien mit.</p>
-    <p>Proteinwerte sind typische Werte pro 100&nbsp;g im Rohzustand bzw. abgetropft, Eier ohne Schale. Angaben ohne Gewähr.</p>
+    <p><b>Gut zu wissen:</b> Billiges Protein ist nicht automatisch gutes Protein. Haferflocken und Nudeln liefern viel Eiweiß pro Euro, aber für 30&nbsp;g Protein isst du über 200&nbsp;g davon und mehr als 800&nbsp;kcal. Als <span class="badge">kalorienreich</span> markiert ist alles mit weniger als 6&nbsp;g Protein pro 100&nbsp;kcal. Eiweiß aus Getreide ist außerdem weniger hochwertig und ergänzt sich gut mit Hülsenfrüchten (z.&nbsp;B. Nudeln mit Linsen).</p>
+    <p>Protein- und Kalorienwerte sind typische Werte pro 100&nbsp;g im Rohzustand bzw. abgetropft, Eier ohne Schale. Angaben ohne Gewähr.</p>
     <p><b>Datenschutz:</b> Diese Seite setzt keine Cookies. Gezählt werden nur Seitenaufrufe und die Antworten auf die Frage oben, anonym und ohne IP-Adresse oder sonstige persönliche Daten. Deine eingetippten Preise verlassen dein Gerät nicht.</p>
   </div>
   <footer>Future Food · Protein-pro-Euro-Rechner</footer>
@@ -209,41 +228,41 @@ const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwwuH46_-1iBMU8YYoNssJ
 // ==========================================================================
 
 // Produkte: Packung in g (bei Dosen: Abtropfgewicht, bei Eiern: ohne Schale),
-// Protein in g pro 100 g, Preis in € (Discounter-Onlinepreise, Stand 04.11.2026).
+// Protein und kcal je 100 g (typische Werte), Preis in € (Discounter-Onlinepreise, Stand 04.11.2026).
 const PRODUKTE = [
   // tierisch
-  { name: 'Magerquark (0,3 % Fett)',       gramm: 500,  protein: 12,   preis: 1.19,  art: 'tierisch' },
-  { name: 'Skyr natur',                    gramm: 500,  protein: 11,   preis: 1.29,  art: 'tierisch' },
-  { name: 'Körniger Frischkäse',           gramm: 200,  protein: 11,   preis: 1.19,  art: 'tierisch' },
-  { name: 'Hüttenkäse (Marke)',            gramm: 400,  protein: 12,   preis: 2.22,  art: 'tierisch' },
-  { name: 'Griechischer Joghurt 0 %',      gramm: 200,  protein: 10,   preis: 1.49,  art: 'tierisch' },
-  { name: 'Harzer Käse',                   gramm: 200,  protein: 28,   preis: 1.99,  art: 'tierisch' },
-  { name: 'Gouda gerieben',                gramm: 250,  protein: 24,   preis: 1.79,  art: 'tierisch' },
-  { name: 'Mozzarella gerieben',           gramm: 250,  protein: 22,   preis: 1.59,  art: 'tierisch' },
-  { name: 'Milch 1,5 % (1 l)',             gramm: 1000, protein: 3.4,  preis: 0.85,  art: 'tierisch' },
-  { name: 'Eier, 18 Stück (Bodenhaltung)', gramm: 950,  protein: 12.5, preis: 4.19,  art: 'tierisch' },
-  { name: 'Hähnchenbrustfilet 1,5 kg',     gramm: 1500, protein: 23,   preis: 12.99, art: 'tierisch' },
-  { name: 'Hähnchenbrustfilet 400 g',      gramm: 400,  protein: 23,   preis: 5.49,  art: 'tierisch' },
-  { name: 'Putenbrustfilet',               gramm: 800,  protein: 24,   preis: 9.99,  art: 'tierisch' },
-  { name: 'Rinderhackfleisch',             gramm: 800,  protein: 20,   preis: 8.79,  art: 'tierisch' },
-  { name: 'Hackfleisch gemischt',          gramm: 500,  protein: 18,   preis: 4.99,  art: 'tierisch' },
-  { name: 'Thunfisch in Öl (Dose)',        gramm: 140,  protein: 25,   preis: 1.29,  art: 'tierisch' },
-  { name: 'Alaska-Seelachsfilet (TK)',     gramm: 1000, protein: 16,   preis: 6.59,  art: 'tierisch' },
-  { name: 'Whey-Proteinpulver',            gramm: 500,  protein: 75,   preis: 14.99, art: 'tierisch' },
-  { name: 'High-Protein-Pudding',          gramm: 400,  protein: 10,   preis: 1.99,  art: 'tierisch' },
+  { name: 'Magerquark (0,3 % Fett)',       gramm: 500,  protein: 12,   kcal: 67 , preis: 1.19,  art: 'tierisch' },
+  { name: 'Skyr natur',                    gramm: 500,  protein: 11,   kcal: 63 , preis: 1.29,  art: 'tierisch' },
+  { name: 'Körniger Frischkäse',           gramm: 200,  protein: 11,   kcal: 98 , preis: 1.19,  art: 'tierisch' },
+  { name: 'Hüttenkäse (Marke)',            gramm: 400,  protein: 12,   kcal: 100, preis: 2.22,  art: 'tierisch' },
+  { name: 'Griechischer Joghurt 0 %',      gramm: 200,  protein: 10,   kcal: 55 , preis: 1.49,  art: 'tierisch' },
+  { name: 'Harzer Käse',                   gramm: 200,  protein: 28,   kcal: 120, preis: 1.99,  art: 'tierisch' },
+  { name: 'Gouda gerieben',                gramm: 250,  protein: 24,   kcal: 360, preis: 1.79,  art: 'tierisch' },
+  { name: 'Mozzarella gerieben',           gramm: 250,  protein: 22,   kcal: 290, preis: 1.59,  art: 'tierisch' },
+  { name: 'Milch 1,5 % (1 l)',             gramm: 1000, protein: 3.4,  kcal: 47 , preis: 0.85,  art: 'tierisch' },
+  { name: 'Eier, 18 Stück (Bodenhaltung)', gramm: 950,  protein: 12.5, kcal: 140, preis: 4.19,  art: 'tierisch' },
+  { name: 'Hähnchenbrustfilet 1,5 kg',     gramm: 1500, protein: 23,   kcal: 105, preis: 12.99, art: 'tierisch' },
+  { name: 'Hähnchenbrustfilet 400 g',      gramm: 400,  protein: 23,   kcal: 105, preis: 5.49,  art: 'tierisch' },
+  { name: 'Putenbrustfilet',               gramm: 800,  protein: 24,   kcal: 105, preis: 9.99,  art: 'tierisch' },
+  { name: 'Rinderhackfleisch',             gramm: 800,  protein: 19,   kcal: 220, preis: 8.79,  art: 'tierisch' },
+  { name: 'Hackfleisch gemischt',          gramm: 500,  protein: 18,   kcal: 260, preis: 4.99,  art: 'tierisch' },
+  { name: 'Thunfisch in Öl (Dose)',        gramm: 140,  protein: 25,   kcal: 195, preis: 1.29,  art: 'tierisch' },
+  { name: 'Alaska-Seelachsfilet (TK)',     gramm: 1000, protein: 16,   kcal: 75 , preis: 6.59,  art: 'tierisch' },
+  { name: 'Whey-Proteinpulver',            gramm: 500,  protein: 75,   kcal: 380, preis: 14.99, art: 'tierisch' },
+  { name: 'High-Protein-Pudding',          gramm: 400,  protein: 10,   kcal: 75 , preis: 1.99,  art: 'tierisch' },
   // pflanzlich
-  { name: 'Rote Linsen',                   gramm: 500,  protein: 25,   preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Tellerlinsen',                  gramm: 500,  protein: 23,   preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Kichererbsen (getrocknet)',     gramm: 500,  protein: 20,   preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Grüne Erbsen (getrocknet)',     gramm: 500,  protein: 22,   preis: 1.29,  art: 'pflanzlich' },
-  { name: 'Kidneybohnen (Dose)',           gramm: 255,  protein: 8,    preis: 0.69,  art: 'pflanzlich' },
-  { name: 'Tofu natur (Bio)',              gramm: 400,  protein: 15,   preis: 2.29,  art: 'pflanzlich' },
-  { name: 'Sojaschnetzel',                 gramm: 300,  protein: 50,   preis: 2.99,  art: 'pflanzlich' },
-  { name: 'Haferflocken',                  gramm: 500,  protein: 13.5, preis: 0.69,  art: 'pflanzlich' },
-  { name: 'Spaghetti',                     gramm: 500,  protein: 12.5, preis: 0.69,  art: 'pflanzlich' },
-  { name: 'Vollkornnudeln (Bio)',          gramm: 500,  protein: 13,   preis: 0.85,  art: 'pflanzlich' },
-  { name: 'Erdnüsse geröstet',             gramm: 200,  protein: 25,   preis: 0.79,  art: 'pflanzlich' },
-  { name: 'Erdnusscreme',                  gramm: 340,  protein: 25,   preis: 1.70,  art: 'pflanzlich' },
+  { name: 'Rote Linsen',                   gramm: 500,  protein: 25,   kcal: 340, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Tellerlinsen',                  gramm: 500,  protein: 23,   kcal: 320, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Kichererbsen (getrocknet)',     gramm: 500,  protein: 20,   kcal: 360, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Grüne Erbsen (getrocknet)',     gramm: 500,  protein: 22,   kcal: 330, preis: 1.29,  art: 'pflanzlich' },
+  { name: 'Kidneybohnen (Dose)',           gramm: 255,  protein: 8,    kcal: 105, preis: 0.69,  art: 'pflanzlich' },
+  { name: 'Tofu natur (Bio)',              gramm: 400,  protein: 15,   kcal: 140, preis: 2.29,  art: 'pflanzlich' },
+  { name: 'Sojaschnetzel',                 gramm: 300,  protein: 50,   kcal: 340, preis: 2.99,  art: 'pflanzlich' },
+  { name: 'Haferflocken',                  gramm: 500,  protein: 13.5, kcal: 372, preis: 0.69,  art: 'pflanzlich' },
+  { name: 'Spaghetti',                     gramm: 500,  protein: 12.5, kcal: 355, preis: 0.69,  art: 'pflanzlich' },
+  { name: 'Vollkornnudeln (Bio)',          gramm: 500,  protein: 13,   kcal: 345, preis: 0.85,  art: 'pflanzlich' },
+  { name: 'Erdnüsse geröstet',             gramm: 200,  protein: 25,   kcal: 600, preis: 0.79,  art: 'pflanzlich' },
+  { name: 'Erdnusscreme',                  gramm: 340,  protein: 25,   kcal: 620, preis: 1.70,  art: 'pflanzlich' },
 ];
 
 // ---------- Zählen (anonym, ohne Cookies) ----------
@@ -273,6 +292,7 @@ zaehle('aufruf');
 // ---------- Rechner ----------
 const produkte = PRODUKTE.map((p, i) => ({ ...p, id: i, standardPreis: p.preis }));
 let filter = 'alle';
+let sortierung = 'euro'; // 'euro' = Protein pro €, 'kcal' = Protein pro 100 kcal
 let naechsteId = produkte.length;
 
 const euro = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -286,14 +306,35 @@ function proEuro(p) {
   if (!p.preis || !p.gramm || !p.protein) return 0;
   return (p.gramm * p.protein / 100) / p.preis;
 }
-function preisPro100gProtein(p) {
-  const g = proEuro(p);
-  return g > 0 ? 100 / g : null;
+// Gramm Protein je 100 kcal; unter 6 gilt ein Produkt als kalorienreich.
+const KALORIEN_GRENZE = 6;
+function proKcal(p) {
+  return p.kcal && p.protein ? p.protein / p.kcal * 100 : 0;
+}
+function istKalorienreich(p) {
+  return !!p.kcal && proKcal(p) < KALORIEN_GRENZE;
+}
+function metrik(p) {
+  return sortierung === 'kcal' ? proKcal(p) : proEuro(p);
+}
+function wertHtml(p) {
+  return sortierung === 'kcal'
+    ? `${zahlFmt.format(proKcal(p))} g <small>Protein/100 kcal</small>`
+    : `${zahlFmt.format(proEuro(p))} g <small>Protein/€</small>`;
+}
+// Was man für 30 g Protein (etwa eine Mahlzeit) essen und zahlen muss.
+function zeile30(p) {
+  if (!p.protein || !p.preis || !p.gramm) return '–';
+  const menge = 3000 / p.protein;
+  const teile = [`${Math.round(menge)} g`];
+  if (p.kcal) teile.push(`${Math.round(menge * p.kcal / 1000) * 10} kcal`);
+  teile.push(`${euro.format(30 / proEuro(p))} €`);
+  return 'Für 30 g Protein: ' + teile.join(' · ');
 }
 function sortiert() {
   return produkte
     .filter(p => filter === 'alle' || p.art === filter)
-    .sort((a, b) => proEuro(b) - proEuro(a));
+    .sort((a, b) => metrik(b) - metrik(a));
 }
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -304,26 +345,26 @@ const offene = new Set();
 
 function zeichne() {
   const daten = sortiert();
-  const max = Math.max(...daten.map(proEuro), 1);
+  const max = Math.max(...daten.map(metrik), 1);
   liste.innerHTML = daten.map((p, i) => {
-    const g = proEuro(p);
-    const p100 = preisPro100gProtein(p);
+    const g = metrik(p);
     return `<li class="item${offene.has(p.id) ? ' offen' : ''}" data-id="${p.id}">
       <div class="zeile1">
         <span class="rang">${i + 1}.</span>
-        <span class="name">${esc(p.name)}</span>
-        <span class="wert" data-feld="wert">${zahlFmt.format(g)} g <small>Protein/€</small></span>
+        <span class="name">${esc(p.name)}${istKalorienreich(p) ? ' <span class="badge" title="weniger als 6 g Protein pro 100 kcal">kalorienreich</span>' : ''}</span>
+        <span class="wert" data-feld="wert">${wertHtml(p)}</span>
       </div>
       <div class="bar"><i data-feld="bar" style="width:${(g / max * 100).toFixed(1)}%"></i></div>
       <div class="zeile2">
-        <span class="info">${zahlFmt.format(p.gramm)} g · ${zahlFmt.format(p.protein)} g Protein/100 g<br>
-          <span class="pro100" data-feld="p100">${p100 ? euro.format(p100) + ' € für 100 g Protein' : '–'}</span></span>
+        <span class="info">${zahlFmt.format(p.gramm)} g · ${zahlFmt.format(p.protein)} g Protein${p.kcal ? ' · ' + zahlFmt.format(p.kcal) + ' kcal' : ''} je 100 g<br>
+          <span class="pro30" data-feld="z30">${zeile30(p)}</span></span>
         <label class="preis">Preis <input class="zahl${p.preis !== p.standardPreis ? ' geaendert' : ''}" data-feld="preis" inputmode="decimal" value="${euro.format(p.preis)}" aria-label="Preis für ${esc(p.name)} in Euro"> €</label>
         <button type="button" class="mehr" data-aktion="details" aria-expanded="${offene.has(p.id)}">${offene.has(p.id) ? 'weniger' : 'ändern'}</button>
       </div>
       <div class="details">
         <label>Packung <input class="zahl" data-feld="gramm" inputmode="decimal" value="${zahlFmt.format(p.gramm)}"> g</label>
         <label>Protein <input class="zahl" data-feld="protein" inputmode="decimal" value="${zahlFmt.format(p.protein)}"> g/100 g</label>
+        <label>Energie <input class="zahl" data-feld="kcal" inputmode="decimal" value="${p.kcal ? zahlFmt.format(p.kcal) : ''}"> kcal/100 g</label>
       </div>
     </li>`;
   }).join('');
@@ -331,9 +372,14 @@ function zeichne() {
 }
 
 function zeichneTop3() {
-  const top = sortiert().slice(0, 3);
+  // Aufs Podest kommen nur Produkte, die nicht kalorienreich sind.
+  const top = sortiert().filter(p => !istKalorienreich(p)).slice(0, 3);
+  document.getElementById('top3titel').textContent = sortierung === 'kcal'
+    ? 'Am meisten Protein pro Kalorie'
+    : 'Am günstigsten, ohne Kalorienbombe';
+  const einheit = sortierung === 'kcal' ? ' g/100 kcal' : ' g/€';
   document.getElementById('top3').innerHTML = top.map(p =>
-    `<div><b>${zahlFmt.format(proEuro(p))} g</b><span>${esc(p.name)}</span></div>`).join('');
+    `<div><b>${zahlFmt.format(metrik(p))}${einheit}</b><span>${esc(p.name)}</span></div>`).join('');
 }
 
 // Beim Tippen nur die Zahlen der Zeile aktualisieren, neu sortiert wird beim Verlassen des Felds.
@@ -345,10 +391,8 @@ liste.addEventListener('input', ev => {
   const n = leseZahl(ev.target.value);
   if (n === null) return;
   p[feld] = n;
-  const g = proEuro(p);
-  const p100 = preisPro100gProtein(p);
-  li.querySelector('[data-feld="wert"]').innerHTML = `${zahlFmt.format(g)} g <small>Protein/€</small>`;
-  li.querySelector('[data-feld="p100"]').textContent = p100 ? euro.format(p100) + ' € für 100 g Protein' : '–';
+  li.querySelector('[data-feld="wert"]').innerHTML = wertHtml(p);
+  li.querySelector('[data-feld="z30"]').textContent = zeile30(p);
   if (feld === 'preis') ev.target.classList.toggle('geaendert', p.preis !== p.standardPreis);
   zeigeLeisteBald();
 });
@@ -363,16 +407,23 @@ liste.addEventListener('click', ev => {
   zeichne();
 });
 
-document.querySelectorAll('.filter button').forEach(b => b.addEventListener('click', () => {
+document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
   filter = b.dataset.filter;
-  document.querySelectorAll('.filter button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  zeichne();
+}));
+document.querySelectorAll('[data-sort]').forEach(b => b.addEventListener('click', () => {
+  sortierung = b.dataset.sort;
+  document.querySelectorAll('[data-sort]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   zeichne();
 }));
 
 document.getElementById('resetKnopf').addEventListener('click', () => {
-  produkte.forEach(p => { p.preis = p.standardPreis; });
-  const orig = PRODUKTE;
-  produkte.forEach(p => { if (p.id < orig.length) { p.gramm = orig[p.id].gramm; p.protein = orig[p.id].protein; } });
+  produkte.forEach(p => {
+    p.preis = p.standardPreis;
+    const orig = PRODUKTE[p.id];
+    if (orig) { p.gramm = orig.gramm; p.protein = orig.protein; p.kcal = orig.kcal; }
+  });
   zeichne();
 });
 
@@ -387,8 +438,9 @@ neuForm.addEventListener('submit', ev => {
   const gramm = leseZahl(neuForm.gramm.value);
   const protein = leseZahl(neuForm.protein.value);
   const preis = leseZahl(neuForm.preis.value);
-  if (!name || !gramm || !protein || !preis) { alert('Bitte alle vier Felder mit Zahlen ausfüllen.'); return; }
-  produkte.push({ name, gramm, protein, preis, standardPreis: preis, art: 'eigen', id: naechsteId++ });
+  const kcal = leseZahl(neuForm.kcal.value);
+  if (!name || !gramm || !protein || !preis) { alert('Bitte Name, Packung, Protein und Preis ausfüllen.'); return; }
+  produkte.push({ name, gramm, protein, kcal, preis, standardPreis: preis, art: 'eigen', id: naechsteId++ });
   neuForm.reset();
   neuForm.classList.remove('offen');
   filter = 'alle';
