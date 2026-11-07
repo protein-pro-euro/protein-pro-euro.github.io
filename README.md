@@ -17,7 +17,7 @@ landen im Blatt „Test“ und zählen nicht mit.
 
 Preise: Onlinepreise eines Discounters (überwiegend ALDI SÜD), abgerufen am 04.11.2026.
 Haferflocken nach ALDI-Nord-Onlinepreis, Eier als 18er-Packung. Sojaschnetzel sind
-geschätzt (Fachhandel, rund 10 €/kg), weil der Discounter sie nicht online führt.
+geschätzt (Fachhandel, rund 10 €/kg), weil der Discounter sie nicht online führt. Sojaflocken nach dm-Onlinepreis (dmBio, 07.11.2026).
 Protein- und Kalorienwerte sind typische Werte pro 100 g im Rohzustand; bei Dosen gilt
 das Abtropfgewicht, bei Eiern das Gewicht ohne Schale (rund 53 g je Ei).
 

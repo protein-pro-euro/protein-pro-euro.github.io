@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Protein pro Euro – Rechner</title>
-<meta name="description" content="Wo bekommst du am meisten Eiweiß für dein Geld? 31 Supermarkt-Produkte im Vergleich, mit Kalorien und deinen eigenen Preisen.">
+<meta name="description" content="Wo bekommst du am meisten Eiweiß für dein Geld? 32 Supermarkt-Produkte im Vergleich, mit Kalorien und deinen eigenen Preisen.">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
@@ -95,7 +95,12 @@
     padding: 7px 13px; border-radius: 999px; font-size: .88rem; cursor: pointer;
   }
   .chips button[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
-  .legende { display: flex; gap: 14px; font-size: .78rem; color: var(--muted); margin: 4px 2px 12px; flex-wrap: wrap; }
+  .legende { display: flex; gap: 6px; margin: 2px 0 12px; flex-wrap: wrap; }
+  .legende button {
+    border: 1px solid var(--line); background: var(--card); color: var(--text);
+    padding: 5px 11px; border-radius: 999px; font-size: .8rem; cursor: pointer;
+  }
+  .legende button[aria-pressed="false"] { opacity: .45; text-decoration: line-through; background: transparent; }
   .punkt { display: inline-block; width: 9px; height: 9px; border-radius: 50%; vertical-align: 0; margin-right: 5px; }
   .punkt.gruen { background: var(--green); } .punkt.gelb { background: var(--yellow); } .punkt.rot { background: var(--red); }
 
@@ -210,7 +215,7 @@
 
   <span class="marke">💪 Protein pro Euro</span>
   <h1>Mehr Eiweiß für dein Geld</h1>
-  <p class="sub">31 Produkte vom Discounter. Tipp auf eins für Details und deinen Preis.</p>
+  <p class="sub">32 Produkte aus Discounter und Drogerie. Tipp auf eins für Details und deinen Preis.</p>
 
   <p class="podesttitel" id="podesttitel"></p>
   <div class="podest" id="podest"></div>
@@ -224,10 +229,10 @@
     <button type="button" data-filter="pflanzlich" aria-pressed="false">🌱 Pflanzlich</button>
     <button type="button" data-filter="tierisch" aria-pressed="false">🥩 Tierisch</button>
   </div>
-  <div class="legende" aria-label="Legende">
-    <span><i class="punkt gruen"></i>schlank</span>
-    <span><i class="punkt gelb"></i>mittel</span>
-    <span><i class="punkt rot"></i>kalorienreich</span>
+  <div class="legende" role="group" aria-label="Nach Kalorien filtern">
+    <button type="button" data-ampel="gruen" aria-pressed="true"><i class="punkt gruen"></i>schlank</button>
+    <button type="button" data-ampel="gelb" aria-pressed="true"><i class="punkt gelb"></i>mittel</button>
+    <button type="button" data-ampel="rot" aria-pressed="true"><i class="punkt rot"></i>kalorienreich</button>
   </div>
 
   <ol class="liste" id="liste"></ol>
@@ -259,7 +264,7 @@
     <details>
       <summary>ℹ️ So wird gerechnet</summary>
       <p>Gramm Protein pro Euro, aus Packungsgröße, Proteingehalt und Preis. Die Ampel zeigt, wie viele Kalorien du dafür mitisst: grün ab 10&nbsp;g Protein pro 100&nbsp;kcal, rot unter 6&nbsp;g. Haferflocken und Nudeln sind billig, aber für 30&nbsp;g Protein isst du über 800&nbsp;kcal. Eiweiß aus Getreide ist außerdem weniger hochwertig und ergänzt sich gut mit Hülsenfrüchten.</p>
-      <p>Werte pro 100&nbsp;g roh bzw. abgetropft, Eier ohne Schale. Preise: Discounter online, Stand November 2026. Ohne Gewähr.</p>
+      <p>Werte pro 100&nbsp;g roh bzw. abgetropft, Eier ohne Schale. Preise: Discounter und dm online, Stand November 2026. Ohne Gewähr.</p>
     </details>
     <details>
       <summary>🔒 Datenschutz</summary>
@@ -317,6 +322,7 @@ const PRODUKTE = [
   { name: 'Grüne Erbsen',           icon: '🍲', info: '500 g, getrocknet',      gramm: 500,  protein: 22,   kcal: 330, preis: 1.29,  art: 'pflanzlich' },
   { name: 'Kidneybohnen',           icon: '🥫', info: 'Dose, 255 g abgetropft', gramm: 255,  protein: 8,    kcal: 105, preis: 0.69,  art: 'pflanzlich' },
   { name: 'Tofu natur',             icon: '🧈', info: '400 g, Bio',             gramm: 400,  protein: 15,   kcal: 140, preis: 2.29,  art: 'pflanzlich' },
+  { name: 'Sojaflocken',            icon: '🌱', info: '500 g, dmBio (dm)',       gramm: 500,  protein: 41,   kcal: 403, preis: 1.95,  art: 'pflanzlich' },
   { name: 'Sojaschnetzel',          icon: '🌱', info: '300 g, Preis geschätzt', gramm: 300,  protein: 50,   kcal: 340, preis: 2.99,  art: 'pflanzlich' },
   { name: 'Haferflocken',           icon: '🌾', info: '500 g',                  gramm: 500,  protein: 13.5, kcal: 372, preis: 0.69,  art: 'pflanzlich' },
   { name: 'Spaghetti',              icon: '🍝', info: '500 g',                  gramm: 500,  protein: 12.5, kcal: 355, preis: 0.69,  art: 'pflanzlich' },
@@ -352,6 +358,7 @@ zaehle('aufruf');
 // ---------- Rechner ----------
 const produkte = PRODUKTE.map((p, i) => ({ ...p, id: i, standardPreis: p.preis }));
 let filter = 'alle';
+const ampelAn = new Set(['gruen', 'gelb', 'rot']); // per Legende abschaltbar
 let sortierung = 'euro'; // 'euro' = Protein pro €, 'kcal' = Protein pro 100 kcal
 let naechsteId = produkte.length;
 const offene = new Set();
@@ -383,6 +390,7 @@ function einheit() { return sortierung === 'kcal' ? 'g / 100 kcal' : 'g / €'; 
 function sortiert() {
   return produkte
     .filter(p => filter === 'alle' || p.art === filter)
+    .filter(p => !ampel(p) || ampelAn.has(ampel(p)))
     .sort((a, b) => metrik(b) - metrik(a));
 }
 function esc(s) {
@@ -499,6 +507,13 @@ liste.addEventListener('click', ev => {
 document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
   filter = b.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  zeichne();
+}));
+document.querySelectorAll('[data-ampel]').forEach(b => b.addEventListener('click', () => {
+  const a = b.dataset.ampel;
+  ampelAn.has(a) ? ampelAn.delete(a) : ampelAn.add(a);
+  if (ampelAn.size === 0) ['gruen', 'gelb', 'rot'].forEach(x => ampelAn.add(x)); // nie alles ausblenden
+  document.querySelectorAll('[data-ampel]').forEach(x => x.setAttribute('aria-pressed', String(ampelAn.has(x.dataset.ampel))));
   zeichne();
 }));
 document.querySelectorAll('[data-sort]').forEach(b => b.addEventListener('click', () => {
