@@ -68,22 +68,36 @@ function einrichten() {
   var a = ss.getSheetByName(BLATT_AUSWERTUNG) || ss.insertSheet(BLATT_AUSWERTUNG, 0);
   a.clear();
   var E = "'" + BLATT_ECHT + "'!";
+  // Je nach Spracheinstellung trennt Sheets Argumente mit "," (englisch) oder ";" (deutsch).
+  // § steht unten als Platzhalter für den passenden Trenner. Dezimalzahlen bewusst vermieden.
+  var trenner = ermittleTrenner_(a);
+  function f(formel) { return formel.replace(/§/g, trenner); }
   a.getRange('A1:B1').setValues([['Gesamt (ohne Tests)', '']]).setFontWeight('bold');
   a.getRange('A2:A7').setValues([['Seitenaufrufe'], ['Ja'], ['Nein'], ['Ja-Quote (Ja ÷ Aufrufe)'], ['Ziel 04.01.2027'], ['Erfolg?']]);
-  a.getRange('B2').setFormula('=COUNTIF(' + E + 'B:B,"aufruf")');
-  a.getRange('B3').setFormula('=COUNTIF(' + E + 'B:B,"ja")');
-  a.getRange('B4').setFormula('=COUNTIF(' + E + 'B:B,"nein")');
-  a.getRange('B5').setFormula('=IF(B2=0,0,B3/B2)').setNumberFormat('0.0%');
+  a.getRange('B2').setFormula(f('=COUNTIF(' + E + 'B:B§"aufruf")'));
+  a.getRange('B3').setFormula(f('=COUNTIF(' + E + 'B:B§"ja")'));
+  a.getRange('B4').setFormula(f('=COUNTIF(' + E + 'B:B§"nein")'));
+  a.getRange('B5').setFormula(f('=IF(B2=0§0§B3/B2)')).setNumberFormat('0.0%');
   a.getRange('B6').setValue('mind. 300 Aufrufe und mind. 5 % Ja');
-  a.getRange('B7').setFormula('=IF(AND(B2>=300,B5>=0.05),"JA","noch nicht")');
+  a.getRange('B7').setFormula(f('=IF(AND(B2>=300§B5*100>=5)§"JA"§"noch nicht")'));
   a.getRange('A9').setValue('Nach Quelle (?q=)').setFontWeight('bold');
-  a.getRange('A10').setFormula(
-    '=IFERROR(QUERY(' + E + 'A:C,"select C, count(A) where B is not null and B <> \'Ereignis\' group by C pivot B",0),"noch keine Daten")'
-  );
+  a.getRange('A10').setFormula(f(
+    '=IFERROR(QUERY(' + E + 'A:C§"select C, count(A) where B is not null and B <> \'Ereignis\' group by C pivot B"§0)§"noch keine Daten")'
+  ));
   a.getRange('E1').setValue('Test-Klicks (zählen nicht)').setFontWeight('bold');
   a.getRange('E2').setFormula("=COUNTA('" + BLATT_TEST + "'!B:B)-1");
   a.setColumnWidth(1, 200);
   a.setColumnWidth(2, 220);
   var leer = ss.getSheetByName('Tabellenblatt1') || ss.getSheetByName('Sheet1');
   if (leer && leer.getLastRow() === 0 && ss.getSheets().length > 1) ss.deleteSheet(leer);
+}
+
+// Probiert eine Testformel mit Komma. Rechnet sie, ist "," richtig, sonst ";".
+function ermittleTrenner_(blatt) {
+  var zelle = blatt.getRange('D1');
+  zelle.setFormula('=SUM(1,1)');
+  SpreadsheetApp.flush();
+  var klappt = zelle.getValue() === 2;
+  zelle.clearContent();
+  return klappt ? ',' : ';';
 }
